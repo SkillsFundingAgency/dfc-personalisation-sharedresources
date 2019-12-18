@@ -1,0 +1,24 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "aseHostingEnvironmentName": {
+            "value": "__AseServiceName__"
+        },
+        "aseResourceGroup": {
+            "value": "__aseResourceGroup__"
+        },
+        "aspInstances": {
+            "value": __AspInstances__
+        },
+        "aspSize": {
+            "value": "__AspSize__"
+        },
+        "aspTier": {
+            "value": "__AspTier__"
+        },
+        "environment": {
+            "value": "__ReleaseEnvironmentName__"
+        }
+    }
+}
