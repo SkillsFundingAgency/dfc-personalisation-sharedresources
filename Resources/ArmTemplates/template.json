@@ -23,7 +23,7 @@
             "type": "string"
         },
         "CosmosDbDatabaseDoesntExist": {
-            "type": "string"
+            "type": "bool"
         }
     },
     "variables": {
