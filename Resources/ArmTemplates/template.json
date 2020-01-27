@@ -21,12 +21,16 @@
         },
         "environment": {
             "type": "string"
+        },
+        "CosmosDbDatabaseDoesntExist": {
+            "type": "bool"
         }
     },
     "variables": {
         "appServicePlanName": "[concat(variables('ResourcePrefix'), '-asp')]",
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/dfc-devops/master/ArmTemplates/",
-        "resourcePrefix": "[tolower(concat('dfc-', parameters('environment'), '-pers-sharedresources'))]"
+        "resourcePrefix": "[tolower(concat('dfc-', parameters('environment'), '-pers-sharedresources'))]",
+        "cosmosDbAccountName": "[concat(variables('resourcePrefix'), '-cdb')]"
     },
     "resources": [
         {
@@ -57,6 +61,58 @@
                     },
                     "nonASETier": {
                         "value": "[parameters('aspTier')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[variables('cosmosDbAccountName')]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'), 'cosmos-db.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "cosmosDbName": {
+                        "value": "[variables('cosmosDbAccountName')]"
+                    },
+                    "cosmosApiType": {
+                        "value": "SQL"
+                    },
+                   "defaultConsistencyLevel": {
+                        "value": "Eventual"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "providerPortalCosmosSQLdatabase",
+            "type": "Microsoft.Resources/deployments",
+            "dependsOn": [
+                "[variables('cosmosDbAccountName')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'CosmosDb/cosmos-database.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "accountName": {
+                        "value": "[variables('cosmosDbAccountName')]"
+                    },
+                    "databaseName": {
+                        "value": "personalisation"
+                    },
+                    "databaseNeedsCreation": {
+                        "value": "[parameters('CosmosDbDatabaseDoesntExist')]"
+                    },
+                    "useSharedRequestUnits": {
+                        "value": false
                     }
                 }
             }

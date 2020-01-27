@@ -19,6 +19,9 @@
         },
         "environment": {
             "value": "__ReleaseEnvironmentName__"
+        },
+        "CosmosDbDatabaseDoesntExist": {
+            "value": __CosmosDbDatabaseDoesntExist__
         }
     }
 }
